@@ -1,56 +1,30 @@
-import { Sequelize, DataTypes } from 'sequelize'
-import sequelize from '../config/database.js';
 import bcrypt from 'bcrypt';
 
-const User = sequelize.define('User', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    set(value) {
-      const hashedPassword = bcrypt.hashSync(value, 10); // 10 is saltRounds
-      this.setDataValue('password', hashedPassword);
+/* USER:
+    id - int, autoinc, pk
+    username - string, nullable, unique
+    password - string, notnullable, bcrypt
+    firstName - string, nullable, notunique
+    lastName - string, nullable, notunique
+    email - string, nullable, unique
+    created - date, CURRENT_TIMESTAMP
+*/
+
+class User {
+    constructor(username, password, firstName, lastName, email) {
+        this.username = username;
+        this.password = this.hashPassword(password);
+        this.created = new Date();
     }
-  },
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: false,
-  },
-  lastName: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: true,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-  },
-});
 
-// Validate password method
-User.prototype.validPassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
-};
+    hashPassword(password) {
+        const saltRounds = 10;
+        return bcrypt.hashSync(password, saltRounds);
+    }
 
-// ?
-(async () => {
-  await sequelize.sync({ force: true });
-  console.log('User table created successfully!');
-})();
+    verifyPassword(passwordToCheck, passwordHash) {
+        return bcrypt.compareSync(passwordToCheck, passwordHash)
+    }
+}
 
 export default User;

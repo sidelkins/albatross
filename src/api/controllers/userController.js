@@ -1,42 +1,51 @@
 import User from "../models/User.js";
+import knexInstance from '../config/database.js';
 
-// READ
-export const getUserById = async (req, res) => {
-    try {
-        const userId = req.params.id;
-        const user = await User.findByPk(userId);
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to get user' });
-    }
+// Create
+User.save = async function(req, res) {
+    const { username, password } = req.body;
+    const newUser = new User(username, password)
+    await knexInstance('users').insert(newUser)
+        .then(() => {
+            console.log(`[USER CREATED] ${username}`)
+            res.send(200)
+        })
+        .catch(err => {
+            console.error(`[USER CREATE FAILED] ${err}`)
+            res.send(500)
+        })
 }
 
-export const getUserByUsername = async (req, res) => {
+// Read
+
+
+// Update
+
+
+// Delete
+
+
+// Create users table if not exists
+async function createUsersTable() {
     try {
-        const username = req.params.username;
-        const user = await User.findOne(username);
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        res.json(user);
+      const exists = await knexInstance.schema.hasTable('users');
+      if (!exists) {
+        await knexInstance.schema.createTable('users', table => {
+          table.increments('id').primary();
+          table.string('username').unique().notNullable();
+          table.string('password').notNullable();
+          table.timestamp('created_at').defaultTo(knexInstance.fn.now());
+        });
+        console.log('Users table created successfully');
+      } else {
+        console.log('Users table already exists');
+      }
     } catch (error) {
-        res.status(500).json({ error: 'Failed to get user' });
+      console.error('Error creating users table:', error);
     }
 }
+  
+// Create users table if not exists
+createUsersTable();
 
-// CREATE
-export const createUser = async (req, res) => {
-    try {
-        const newUser = await User.create(req.body);
-        res.json(newUser);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to create user' });
-    }
-}
+export default User;
