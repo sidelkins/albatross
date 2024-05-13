@@ -1,9 +1,17 @@
-import { Sequelize } from "sequelize";
+import Database from 'better-sqlite3';
+import knex from 'knex';
 
-// Initialize Sequelize with SQLite as the database
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: '../db.sqlite',
-  });
-  
-export default sequelize;
+const dbFile = 'albatross.db';
+
+// better-sqlite3 Database Creation
+const db = new Database(dbFile);
+db.pragma('journal_mode = WAL');
+
+const knexInstance = knex({
+  client: 'better-sqlite3', // or 'sqlite3'
+  connection: {
+    filename: dbFile
+  }
+})
+
+export default knexInstance;
