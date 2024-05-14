@@ -17,6 +17,27 @@ User.save = async function(req, res) {
 }
 
 // Read
+User.getById = async function(req, res) {
+  const id = req.body.id;
+  try {
+    const result = await knexInstance('users').select('id', 'username').where( {id} );
+    res.json(result)
+  } catch (error) {
+    console.error(`[USER GET FAILED] ${error}`)
+    res.send(500)
+  }
+}
+
+User.getByUsername = async function(req, res) {
+  const username = req.body.username;
+  try {
+    const result = await knexInstance('users').select('id', 'username').where( {username} );
+    res.json(result);
+  } catch (error) {
+    console.error(`[USER GET FAILED] ${error}`)
+    res.send(500)
+  }
+}
 
 
 // Update
@@ -34,7 +55,7 @@ async function createUsersTable() {
           table.increments('id').primary();
           table.string('username').unique().notNullable();
           table.string('password').notNullable();
-          table.timestamp('created_at').defaultTo(knexInstance.fn.now());
+          table.timestamp('created').defaultTo(knexInstance.fn.now());
         });
         console.log('Users table created successfully');
       } else {
