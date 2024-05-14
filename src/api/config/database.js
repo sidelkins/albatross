@@ -18,7 +18,6 @@ function createDatabase() {
   try {
     if(dbType == 'better-sqlite3') {
       const db = new Database(dbFile);
-      db.pragma('journal_mode = WAL');
 
       config = {
         client: dbType,
