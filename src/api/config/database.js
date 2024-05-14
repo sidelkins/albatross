@@ -23,7 +23,8 @@ function createDatabase() {
         client: dbType,
         connection: {
           filename: dbFile
-        }
+        },
+        useNullAsDefault: true
       };
     }
     if(dbType == 'pg') {
