@@ -1,10 +1,13 @@
 import express from 'express'
 import cors from 'cors'
+import dotenv from 'dotenv';
 import defaultRoutes from './routes/default.js'
 import userRoutes from './routes/userRoutes.js'
+import bagRoutes from './routes/bagRoutes.js'
 
 const app = express()
-const port = 5000
+dotenv.config();
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors())
@@ -17,6 +20,7 @@ app.use(express.json())
 // Routes
 app.use('/api', defaultRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/bag', bagRoutes)
 
 // Start Server
 app.listen(port, () => {
