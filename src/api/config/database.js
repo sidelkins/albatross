@@ -1,17 +1,28 @@
 import Database from 'better-sqlite3';
 import knex from 'knex';
+import dotenv from 'dotenv';
 
-const dbFile = 'albatross.db';
+const dbType = process.env.DB_TYPE || 'better-sqlite3';
+const dbFile = process.env.DB_FILE || 'albatross.db';
 
 // better-sqlite3 Database Creation
-const db = new Database(dbFile);
-db.pragma('journal_mode = WAL');
+if(dbType == 'better-sqlite3') {
+  try{ 
+    const db = new Database(dbFile);
+    db.pragma('journal_mode = WAL');
+    console.log(`[SUCCESS] create better-sqlite3 db`)
+  } catch (error) {
+    console.error(`[FAIL] create better-sqlite3 db: ${error}`)
+  }
+}
 
-const knexInstance = knex({
-  client: 'better-sqlite3', // or 'sqlite3'
+const config = {
+  client: dbType,
   connection: {
     filename: dbFile
   }
-})
+};
+
+const knexInstance = knex(config);
 
 export default knexInstance;
