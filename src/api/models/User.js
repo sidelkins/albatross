@@ -1,3 +1,4 @@
+import { v4 }  from 'uuid';
 import bcrypt from 'bcrypt';
 
 /* USER:
@@ -12,6 +13,7 @@ import bcrypt from 'bcrypt';
 
 class User {
     constructor(username, password, firstName, lastName, email) {
+        this.id = v4();
         this.username = username;
         this.password = this.hashPassword(password);
         this.created = new Date();

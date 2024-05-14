@@ -52,7 +52,7 @@ async function createUsersTable() {
       const exists = await knexInstance.schema.hasTable('users');
       if (!exists) {
         await knexInstance.schema.createTable('users', table => {
-          table.increments('id').primary();
+          table.uuid('id').primary();
           table.string('username').unique().notNullable();
           table.string('password').notNullable();
           table.timestamp('created').defaultTo(knexInstance.fn.now());
