@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv';
 import defaultRoutes from './routes/default.js'
 import userRoutes from './routes/userRoutes.js'
+import roundRoutes from './routes/roundRoutes.js'
 import bagRoutes from './routes/bagRoutes.js'
 
 const app = express()
@@ -20,6 +21,7 @@ app.use(express.json())
 // Routes
 app.use('/api', defaultRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/round', roundRoutes)
 app.use('/api/bag', bagRoutes)
 
 // Start Server
