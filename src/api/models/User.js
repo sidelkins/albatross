@@ -12,8 +12,8 @@ import bcrypt from 'bcrypt';
 */
 
 class User {
-    constructor(username, password, firstName, lastName, email) {
-        this.id = v4();
+    constructor(id, username, password, firstName, lastName, email) {
+        this.id = v4() || id;
         this.username = username;
         this.password = this.hashPassword(password);
         this.created = new Date();
@@ -23,10 +23,10 @@ class User {
         const saltRounds = 10;
         return bcrypt.hashSync(password, saltRounds);
     }
+}
 
-    verifyPassword(passwordToCheck, passwordHash) {
-        return bcrypt.compareSync(passwordToCheck, passwordHash)
-    }
+export function verifyPassword(passwordToCheck, passwordHash) {
+    return bcrypt.compareSync(passwordToCheck, passwordHash)
 }
 
 export default User;
