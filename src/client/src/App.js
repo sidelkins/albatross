@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AuthProvider from 'react-auth-kit';
+import createStore from 'react-auth-kit/createStore';
 import Layout from "./scenes/layout";
+import Login from "./scenes/auth/login";
 import Home from "./scenes/home";
 import Round from "./scenes/round";
 import NewRound from "./scenes/round/NewRound";
@@ -28,6 +31,13 @@ const theme = createTheme({
 function App() {
   const [data, setData] = useState({});
 
+  const store = createStore({
+    authName:'_auth',
+    authType:'cookie',
+    cookieDomain: window.location.hostname,
+    cookieSecure: false,
+  });
+
   useEffect(() => {
     fetch("/api/test")
       .then((response) => response.json())
@@ -38,6 +48,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <AuthProvider store={store}>
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
@@ -49,6 +60,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
