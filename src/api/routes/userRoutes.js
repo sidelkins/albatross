@@ -8,6 +8,7 @@ router.get('/get/byusername', User.getByUsername)
 
 // POST
 router.post('/create', User.save)
+router.post('/login', User.login)
 
 // PUT
 
