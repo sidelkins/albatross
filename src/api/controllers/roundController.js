@@ -6,6 +6,8 @@ Round.save = async function(req, res) {
     const { player_id, course_name, holes_played, scores } = req.body;
     const newRound = new Round(player_id, course_name, holes_played, scores);
 
+    //TODO: Field validation
+
     let query = {
         id: newRound.id,
         player_id: newRound.playerId, 
@@ -27,7 +29,7 @@ Round.save = async function(req, res) {
 
 // Read
 Round.getByUserId = async function(req, res) {
-    const userId = req.body.userId;
+    const userId = req.params.id;
     try {
       const result = await knexInstance('rounds').select('*').where('player_id', userId);
       res.json(result)
@@ -40,6 +42,19 @@ Round.getByUserId = async function(req, res) {
 // Update
 
 // Delete
+Round.deleteById = async function(req, res) {
+  const roundId = req.params.id;
+  console.log(roundId)
+    await knexInstance('rounds').where('id', roundId).delete()
+      .then(() => {
+        console.log(`[ROUND DELETED] ${roundId}`)
+        res.send(200)
+      })
+      .catch(err => {
+        console.error(`[ROUND DEL FAILED] ${err}`)
+        res.send(500)
+      });
+}
 
 // Create rounds table if not exists
 async function createRoundsTable() {
