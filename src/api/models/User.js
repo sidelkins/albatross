@@ -1,5 +1,6 @@
 import { v4 }  from 'uuid';
 import bcrypt from 'bcrypt';
+import PlayerStats from './PlayerStats.js';
 
 /* USER:
     id - int, autoinc, pk
@@ -15,13 +16,9 @@ class User {
     constructor(id, username, password, firstName, lastName, email) {
         this.id = v4() || id;
         this.username = username;
-        this.password = this.hashPassword(password);
+        this.password = password;
         this.created = new Date();
-    }
-
-    hashPassword(password) {
-        const saltRounds = 10;
-        return bcrypt.hashSync(password, saltRounds);
+        // this.PlayerStats = new PlayerStats();
     }
 }
 

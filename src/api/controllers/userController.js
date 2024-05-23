@@ -1,11 +1,13 @@
 import User, { verifyPassword } from "../models/User.js";
 import knexInstance from '../config/database.js';
 import jwt from 'jsonwebtoken';
+import { hashSync } from "bcrypt";
 
 // Create
 User.save = async function(req, res) {
     const { username, password } = req.body;
-    const newUser = new User(username, password)
+    let hashedPassword = hashSync(password, 10)
+    const newUser = new User(null, username, hashedPassword)
     await knexInstance('users').insert(newUser)
         .then(() => {
             console.log(`[USER CREATED] ${username}`)
@@ -56,7 +58,7 @@ User.login = async function(req, res) {
     }
 
     const accessToken = jwt.sign(
-      { userId: foundUser.userId, username: foundUser.username },
+      { userId: foundUser.id, username: foundUser.username },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     )
@@ -74,10 +76,18 @@ User.login = async function(req, res) {
     //   maxAge: 7 * 24 * 60 * 60 * 1000,
     // });
 
-    res.json({ token: accessToken });
+    res.json(
+      { 
+        token: accessToken, 
+        user: 
+          { 
+            id: foundUser.id,
+            username: foundUser.username,
+            created: foundUser.created
+          }
+      });
   } catch (error) {
-    console.error(`[USER LOGIN FAILED] ${error}`)
-    res.sendStatus(500)
+    console.error(`[USER LOGIN FAILED] User: ${username} Error: ${error}`)
   }
 }
 
