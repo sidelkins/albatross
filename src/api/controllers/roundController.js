@@ -3,8 +3,9 @@ import knexInstance from '../config/database.js';
 
 // Create
 Round.save = async function(req, res) {
-    const { playerId, courseName, holesPlayed, scores } = req.body;
-    const newRound = new Round(playerId, courseName, holesPlayed, scores);
+    const { player_id, course_name, holes_played, scores } = req.body;
+    const newRound = new Round(player_id, course_name, holes_played, scores);
+
     let query = {
         id: newRound.id,
         player_id: newRound.playerId, 
@@ -15,7 +16,7 @@ Round.save = async function(req, res) {
 
     await knexInstance('rounds').insert(query)
         .then(() => {
-            console.log(`[ROUND CREATED] ${playerId}`)
+            console.log(`[ROUND CREATED] ${newRound.id}`)
             res.send(200)
         })
         .catch(err => {

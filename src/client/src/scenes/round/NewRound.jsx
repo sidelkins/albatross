@@ -10,13 +10,18 @@ import {
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import FlexBetween from "../../components/FlexBetween";
 
 const NewRound = ({ handleClose }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
+  const user = useAuthUser(); // TODO: Limit form to when there is Auth
+  const playerId = user.id;
+  const [courseName, setCourseName] = useState("");
   const [roundType, setRoundType] = useState("18 Holes");
+  const [tees, setTees] = useState("");
 
   const handleBackButton = () => {
     if (handleClose) {
@@ -30,16 +35,42 @@ const NewRound = ({ handleClose }) => {
     setRoundType(type);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted");
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+
+    let formData = // TODO: Implement formik like on login (?)
+    {
+      course_name: courseName,
+      holes_played: roundType,
+      player_id: playerId
+    }
+
+    try {
+        const response = await fetch("/api/round/create", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+
+        if(response.ok) {
+          console.log("Round Started") // TODO: Success Modal (?)
+        } else {
+          console.log(response)
+        }
+
+    } catch (error) {
+      console.log(error)
+    }
   };
 
-  const TooltipTextField = ({ label, tooltip, ...props }) => (
+  const TooltipTextField = ({ label, tooltip, value, onChange, ...props }) => (
     <Tooltip title={tooltip} arrow>
       <TextField
         label={label}
+        value={value}
+        onChange={onChange}
         {...props}
         sx={{
           "& .MuiInputLabel-root": {
@@ -95,6 +126,8 @@ const NewRound = ({ handleClose }) => {
             fullWidth
             type="text"
             label="Course"
+            value={courseName}
+            onChange={(e) => setCourseName(e.target.value)}
             sx={{
               gridColumn: "span 2",
               mb: 3,
@@ -197,6 +230,8 @@ const NewRound = ({ handleClose }) => {
             variant="outlined"
             fullWidth
             margin="normal"
+            value={tees}
+            onChange={(e) => setTees(e.target.value)}
           />
           <Button
             type="submit"
