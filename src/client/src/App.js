@@ -3,8 +3,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthProvider from 'react-auth-kit';
 import createStore from 'react-auth-kit/createStore';
+import RequireAuth from '@auth-kit/react-router/RequireAuth'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Layout from "./scenes/layout";
 import Login from "./scenes/auth/login";
+import Register from "./scenes/auth/register";
 import Home from "./scenes/home";
 import Round from "./scenes/round";
 import NewRound from "./scenes/round/NewRound";
@@ -29,7 +33,6 @@ const theme = createTheme({
 });
 
 function App() {
-  const [data, setData] = useState({});
 
   const store = createStore({
     authName:'_auth',
@@ -38,19 +41,14 @@ function App() {
     cookieSecure: false,
   });
 
-  useEffect(() => {
-    fetch("/api/test")
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      });
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider store={store}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/round" element={<Round />} />
@@ -60,6 +58,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </LocalizationProvider>
       </AuthProvider>
     </ThemeProvider>
   );
