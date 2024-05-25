@@ -10,12 +10,25 @@ User.save = async function(req, res) {
     const newUser = new User(null, username, hashedPassword)
     await knexInstance('users').insert(newUser)
         .then(() => {
-            console.log(`[USER CREATED] ${username}`)
-            res.send(200)
+            res.status(200).json({
+              status: 'ok',
+              message: `User ${username} created`,
+              user: {
+                id: newUser.id,
+                username: newUser.username,
+                created: newUser.created
+              }
+            })
         })
         .catch(err => {
-            console.error(`[USER CREATE FAILED] ${err}`)
-            res.send(500)
+            if(err.code == 'SQLITE_CONSTRAINT_UNIQUE') { // Theres gotta be a more eloquent way of implementing this, haha
+              res.status(500).json({
+                status:'error',
+                message: 'User already exists',
+                code: 'INTERNAL_SERVER_ERROR',
+                details: err.code
+              })
+            }
         })
 }
 

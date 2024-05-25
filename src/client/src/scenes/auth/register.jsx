@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 
-function Login() {
+function Register() {
     const signIn = useSignIn()
     const [formData, setFormData] = React.useState({username: '', password: ''})
+    const [statusText, setStatusText] = useState("")
 
     function redirectToHome() {
       console.log("home")
@@ -12,9 +13,9 @@ function Login() {
 
     const onSubmit = async(e) => {
         e.preventDefault();
-
+        
         try {
-          const response = await fetch("/api/user/login", {
+          const response = await fetch("/api/user/create", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -24,18 +25,27 @@ function Login() {
 
           const data = await response.json();
 
-          signIn({
-            auth: {
-              token: data.token,
-              type: 'Bearer'
-            },
-            // refresh: data.token,
-            userState: {
-              id: data.user.id,
-              username: data.user.username,
-              created: data.user.created
-            }
-          })          
+          if(response.status == 200) {
+            setStatusText(data.message)
+            
+            signIn({
+              auth: {
+                token: data.token,
+                type: 'Bearer'
+              },
+              // refresh: data.token,
+              userState: {
+                id: data.user.id,
+                username: data.user.username,
+                created: data.user.created
+              }
+            })
+          }
+
+          if(response.status == 500) {
+            setStatusText(data.message)
+          }
+
         } catch(error) {
           console.log(error)
         }
@@ -43,7 +53,7 @@ function Login() {
 
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <h1>Login</h1>
+        <h1>Register</h1>
         <form onSubmit={onSubmit} style={{ width: '300px' }}>
           <div>
             <label htmlFor="username">Username:</label>
@@ -55,8 +65,9 @@ function Login() {
           </div>
           <button>Submit</button>
         </form>
+        <p>{ statusText }</p>
       </div>
     )
 }
 
-export default Login;
+export default Register;
