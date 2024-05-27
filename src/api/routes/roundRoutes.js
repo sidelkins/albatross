@@ -4,6 +4,7 @@ import Round from '../controllers/roundController.js';
 
 // GET
 router.get('/get/by/userid/:id', Round.getByUserId)
+router.get('/get/by/id/:id', Round.getById)
 
 // POST
 router.post('/create', Round.save)

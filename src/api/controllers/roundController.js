@@ -40,6 +40,17 @@ Round.getByUserId = async function(req, res) {
     }
 }
 
+Round.getById = async function(req, res) {
+  const roundId = req.params.id;
+  try {
+    const result = await knexInstance('rounds').select('*').where('id', roundId);
+    res.json(result)
+  } catch (error) {
+    console.error(`[ROUND GET FAILED] ${error}`)
+    res.send(500)
+  }
+}
+
 // Update
 
 // Delete

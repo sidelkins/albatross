@@ -51,7 +51,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/round" element={<Round />} />
+            <Route path="/round/:id" element={<Round />} />
             <Route path="/round/create/single" element={<NewRound />} />
             <Route path="/history" element={<RoundHistory />} />
             <Route path="/bag" element={<MyBag />} />
