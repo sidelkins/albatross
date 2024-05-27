@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import FlexBetween from "../../components/FlexBetween";
-import { Typography, Button } from "@mui/material";
+import { Typography, Button, CircularProgress } from "@mui/material";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
@@ -10,6 +10,7 @@ const RoundHistory = () => {
   const user = useAuthUser(); // TODO: Limit form to when there is Auth
   const playerId = user.id;
 
+  const [isLoading, setIsLoading] = useState(true);
   const [rounds, setRounds] = useState([]);
 
   const getPlayerRounds = async() => {
@@ -22,6 +23,8 @@ const RoundHistory = () => {
     } catch (error) {
       console.error("Failed to fetch player rounds:", error);
       return [];
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -57,7 +60,10 @@ const RoundHistory = () => {
     <FlexBetween>
       <Typography>
         <h3>Round History</h3>
-        <table>
+        { isLoading ? (
+          <CircularProgress />
+        ) : (
+          <table>
           <thead>
             <tr>
               <th>Course Name</th>
@@ -80,6 +86,7 @@ const RoundHistory = () => {
             ))}
           </tbody>
         </table>
+        )}
       </Typography>
     </FlexBetween>
   );

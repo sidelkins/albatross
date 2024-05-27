@@ -23,7 +23,7 @@ const NewRound = ({ handleClose }) => {
   const playerId = user.id;
   const [courseName, setCourseName] = useState("");
   const [date, setDate] = useState()
-  const [roundType, setRoundType] = useState("18 Holes");
+  const [roundType, setRoundType] = useState("");
   const [tees, setTees] = useState("");
 
   const handleBackButton = () => {
@@ -41,10 +41,12 @@ const NewRound = ({ handleClose }) => {
   const handleSubmit = async(e) => {
     e.preventDefault();
 
+    const formattedDate = dayjs(date).toISOString();
+
     let formData = // TODO: Implement formik like on login (?)
     {
       course_name: courseName,
-      date: date,
+      date: formattedDate,
       holes_played: roundType,
       player_id: playerId
     }
@@ -62,8 +64,7 @@ const NewRound = ({ handleClose }) => {
 
         if(response.status === 200) {
           // TODO: Success Modal (?)
-          // TODO: Redirect to scorecard using id
-          console.log(data.id)
+          navigate(`/round/${data.id}`)
         } else {
           console.log(response)
         }
