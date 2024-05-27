@@ -4,6 +4,7 @@ import { Typography, Button, CircularProgress } from "@mui/material";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import StartRoundButton from "../../components/StartRoundButton";
 
 const RoundHistory = () => {
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ const RoundHistory = () => {
     <FlexBetween>
       <Typography>
         <h3>Round History</h3>
+        <StartRoundButton />
         { isLoading ? (
           <CircularProgress />
         ) : (
@@ -72,8 +74,12 @@ const RoundHistory = () => {
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            { rounds.map (round => (
+
+            { rounds.length == 0 ? (
+              <p>No rounds yet!</p>
+            ) : (
+              <tbody>
+              { rounds.map (round => (
               <tr key={round.id}>
                 <td>{round.course_name}</td>
                 <td>{dayjs(round.date).format("MM/DD/YYYY")}</td>
@@ -84,7 +90,8 @@ const RoundHistory = () => {
                 </td>
               </tr>
             ))}
-          </tbody>
+            </tbody>
+          )}
         </table>
         )}
       </Typography>
