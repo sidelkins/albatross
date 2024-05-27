@@ -58,6 +58,7 @@ const RoundHistory = () => {
           <thead>
             <tr>
               <th>Course Name</th>
+              <th>Date</th>
               <th>Holes</th>
             </tr>
           </thead>
@@ -65,6 +66,7 @@ const RoundHistory = () => {
             { rounds.map (round => (
               <tr key={round.id}>
                 <td>{round.course_name}</td>
+                <td>{round.date}</td>
                 <td>{round.holes_played}</td>
                 <td>
                   <Button onClick={() => editRound(round.id)} variant="contained" color="primary">Edit</Button>

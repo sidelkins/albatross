@@ -8,6 +8,8 @@ import {
   ButtonGroup,
   Tooltip,
 } from "@mui/material";
+import dayjs from 'dayjs';
+import { DatePicker } from "@mui/x-date-pickers"
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
@@ -20,6 +22,7 @@ const NewRound = ({ handleClose }) => {
   const user = useAuthUser(); // TODO: Limit form to when there is Auth
   const playerId = user.id;
   const [courseName, setCourseName] = useState("");
+  const [date, setDate] = useState()
   const [roundType, setRoundType] = useState("18 Holes");
   const [tees, setTees] = useState("");
 
@@ -41,6 +44,7 @@ const NewRound = ({ handleClose }) => {
     let formData = // TODO: Implement formik like on login (?)
     {
       course_name: courseName,
+      date: date,
       holes_played: roundType,
       player_id: playerId
     }
@@ -54,8 +58,12 @@ const NewRound = ({ handleClose }) => {
           body: JSON.stringify(formData)
         })
 
-        if(response.ok) {
-          console.log("Round Started") // TODO: Success Modal (?)
+        const data = await response.json();
+
+        if(response.status === 200) {
+          // TODO: Success Modal (?)
+          // TODO: Redirect to scorecard using id
+          console.log(data.id)
         } else {
           console.log(response)
         }
@@ -149,6 +157,14 @@ const NewRound = ({ handleClose }) => {
                 color: theme.palette.text.default,
               },
             }}
+          />
+          <DatePicker 
+            fullWidth
+            type="date"
+            label="Date"
+            defaultValue={dayjs(Date())}
+            value={date}
+            onChange={(e) => setDate(e)}
           />
           <Typography
             variant="body1"

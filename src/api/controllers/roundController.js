@@ -3,8 +3,8 @@ import knexInstance from '../config/database.js';
 
 // Create
 Round.save = async function(req, res) {
-    const { player_id, course_name, holes_played, scores } = req.body;
-    const newRound = new Round(player_id, course_name, holes_played, scores);
+    const { player_id, course_name, date, holes_played, scores } = req.body;
+    const newRound = new Round(player_id, course_name, date, holes_played, scores);
 
     //TODO: Field validation
 
@@ -12,6 +12,7 @@ Round.save = async function(req, res) {
         id: newRound.id,
         player_id: newRound.playerId, 
         course_name: newRound.courseName, 
+        date: newRound.date,
         holes_played: newRound.holesPlayed, 
         scores: newRound.scores
     };
@@ -19,7 +20,7 @@ Round.save = async function(req, res) {
     await knexInstance('rounds').insert(query)
         .then(() => {
             console.log(`[ROUND CREATED] ${newRound.id}`)
-            res.send(200)
+            res.status(200).json({id: newRound.id})
         })
         .catch(err => {
             console.error(`[ROUND CREATE FAILED] ${err}`)
@@ -65,6 +66,7 @@ async function createRoundsTable() {
           table.uuid('id').primary();
           table.uuid('player_id').unsigned().references('users.id');
           table.string('course_name').notNullable();
+          table.date('date');
           table.json('holes_played');
           table.json('scores');
         });
