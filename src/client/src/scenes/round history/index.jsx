@@ -2,8 +2,11 @@ import { React, useEffect, useState } from "react";
 import FlexBetween from "../../components/FlexBetween";
 import { Typography, Button } from "@mui/material";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 const RoundHistory = () => {
+  const navigate = useNavigate();
   const user = useAuthUser(); // TODO: Limit form to when there is Auth
   const playerId = user.id;
 
@@ -20,10 +23,6 @@ const RoundHistory = () => {
       console.error("Failed to fetch player rounds:", error);
       return [];
     }
-  }
-
-  const editRound = async(roundId) => {
-    // TODO
   }
 
   const deleteRound = async(roundId) => {
@@ -66,10 +65,10 @@ const RoundHistory = () => {
             { rounds.map (round => (
               <tr key={round.id}>
                 <td>{round.course_name}</td>
-                <td>{round.date}</td>
+                <td>{dayjs(round.date).format("MM/DD/YYYY")}</td>
                 <td>{round.holes_played}</td>
                 <td>
-                  <Button onClick={() => editRound(round.id)} variant="contained" color="primary">Edit</Button>
+                  <Button onClick={() => navigate(`/round/${round.id}`)} variant="contained" color="primary">View / Edit</Button>
                   <Button onClick={() => deleteRound(round.id)} variant="contained" color="secondary">Delete</Button>
                 </td>
               </tr>
