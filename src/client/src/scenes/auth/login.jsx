@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 
 function Login() {
     const signIn = useSignIn()
     const [formData, setFormData] = React.useState({username: '', password: ''})
+    const [statusText, setStatusText] = useState("")
 
     function redirectToHome() {
       console.log("home")
@@ -24,18 +25,25 @@ function Login() {
 
           const data = await response.json();
 
-          signIn({
-            auth: {
-              token: data.token,
-              type: 'Bearer'
-            },
-            // refresh: data.token,
-            userState: {
-              id: data.user.id,
-              username: data.user.username,
-              created: data.user.created
-            }
-          })          
+          if(response.status === 400 || response.status === 404) {
+            setStatusText(data.message)
+          }
+
+          if(response.ok) {
+            signIn({
+              auth: {
+                token: data.token,
+                type: 'Bearer'
+              },
+              // refresh: data.token,
+              userState: {
+                id: data.user.id,
+                username: data.user.username,
+                created: data.user.created
+              }
+            })
+          }
+          
         } catch(error) {
           console.log(error)
         }
@@ -55,6 +63,7 @@ function Login() {
           </div>
           <button>Submit</button>
         </form>
+        <p>{ statusText }</p>
       </div>
     )
 }

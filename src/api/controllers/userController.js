@@ -61,13 +61,17 @@ User.login = async function(req, res) {
     const foundUser = await knexInstance('users')
     .where('username', username)
     .first();
-    const passwordCheck = verifyPassword(password, foundUser.password)
 
     if(!foundUser) {
-      res.sendStatus(404)
+      res.status(404).json({ message: "User not found." })
+      return;
     }
+
+    const passwordCheck = verifyPassword(password, foundUser.password)
+
     if(!passwordCheck) {
       res.status(400).json({ message: "Incorrect username or password." })
+      return;
     }
 
     const accessToken = jwt.sign(
@@ -76,6 +80,7 @@ User.login = async function(req, res) {
       { expiresIn: "15m" }
     )
 
+    // TODO: Implement refresh
     // const refreshToken = jwt.sign(
     //   { username: foundUser.username },
     //   process.env.REFRESH_TOKEN_SECRET,
