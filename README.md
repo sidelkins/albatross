@@ -18,3 +18,7 @@ A self-hostable Golf scorecard
 - [ ] Front End
   - [ ] Bag with Clubs
   - [ ] Track Shots estimate yardage
+
+- [ ] Scorecard
+  - [ ] Basic Layout and Functionality
+  - [ ] Create template - A template with pars for a course
