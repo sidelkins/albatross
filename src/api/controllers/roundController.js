@@ -43,7 +43,7 @@ Round.getByUserId = async function(req, res) {
 Round.getById = async function(req, res) {
   const roundId = req.params.id;
   try {
-    const result = await knexInstance('rounds').select('*').where('id', roundId);
+    const result = await knexInstance('rounds').select('*').where('id', roundId).first();
     res.json(result)
   } catch (error) {
     console.error(`[ROUND GET FAILED] ${error}`)
@@ -52,6 +52,18 @@ Round.getById = async function(req, res) {
 }
 
 // Update
+Round.update = async function(req, res) {
+  const roundId = req.params.id;
+  const { course_name, date } = req.body;
+  await knexInstance('rounds').where('id', roundId)
+    .update({
+      course_name: course_name,
+      date: date
+    })
+    .then(() => {
+      res.send(200)
+    })
+}
 
 // Delete
 Round.deleteById = async function(req, res) {

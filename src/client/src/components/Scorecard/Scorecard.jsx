@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Button } from '@mui/material';
 
-const GolfScorecard = ({ initialCourse, initialDate, initialScores, initialPars }) => {
-  const [course, setCourse] = useState("" || initialCourse);
-  const [date, setDate] = useState("" || initialDate);
+const GolfScorecard = ({ id, initialCourse, initialDate, initialScores, initialPars }) => {
+  const [course, setCourse] = useState("");
+  const [date, setDate] = useState(initialDate);
   const [scores, setScores] = useState(Array(18).fill(0) || initialScores);
   const [pars, setPars] = useState(Array(18).fill(0) || initialPars);
 
@@ -22,9 +22,38 @@ const GolfScorecard = ({ initialCourse, initialDate, initialScores, initialPars 
     setPars(newPars);
   };
 
-  const handleSave = () => {
-    
+  const handleSave = async() => {
+    const roundData = {
+      course_name: course,
+      date: date
+    }
+    console.log(roundData)
+    try {
+      const response = await fetch(`/api/round/update/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(roundData)
+      })
+
+      // const data = await response.json();
+
+      if(response.status === 200) {
+        // TODO: Success message
+        console.log('Success')
+      } else {
+        console.log(response)
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
+
+  useEffect(() => {
+    setCourse(initialCourse)
+    setDate(initialDate)
+  }, [initialCourse, initialDate])
 
   const totalPars = pars.reduce((acc, score) => acc + score, 0);
   const totalScore = scores.reduce((acc, score) => acc + score, 0);

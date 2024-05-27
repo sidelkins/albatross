@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import GolfScorecard from "../../components/Scorecard/Scorecard";
+import dayjs from "dayjs";
 
 const Round = () => {
   const { id } = useParams();
@@ -19,7 +20,7 @@ const Round = () => {
 
       if(response.status === 200) {
         setCourse(data.course_name)
-        setDate(data.date)
+        setDate(dayjs(data.date))
         setScores(data.scores)
         // setPars()
         // setHolesPlayed("")
@@ -38,6 +39,7 @@ const Round = () => {
 
   return (
     <GolfScorecard 
+      id={id}
       initialCourse={course}
       initialDate={date || null}
       initialScores={scores}

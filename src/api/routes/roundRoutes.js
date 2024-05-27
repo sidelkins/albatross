@@ -11,6 +11,9 @@ router.post('/create', Round.save)
 
 // PUT
 
+// PATCH
+router.patch('/update/:id', Round.update)
+
 // DELETE
 router.delete('/delete/by/id/:id', Round.deleteById)
 
