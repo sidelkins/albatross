@@ -26,17 +26,21 @@ const RoundHistory = () => {
   }
 
   const deleteRound = async(roundId) => {
-    try {
-      const response = await fetch(`/api/round/delete/by/id/${roundId}`, {
-        method: 'DELETE'
-      })
-      
-      if(response.ok) {
-        // TODO: Confirmation Modal, Success Notification
-        setRounds(prevRounds => prevRounds.filter(round => round.id !== roundId));
+    // TODO: Modal instead of JS Confirm (?)
+    const confirmed = window.confirm("Are you sure you want to delete this round?")
+    if(confirmed) {
+      try {
+        const response = await fetch(`/api/round/delete/by/id/${roundId}`, {
+          method: 'DELETE'
+        })
+        
+        if(response.ok) {
+          // TODO: Confirmation Modal, Success Notification
+          setRounds(prevRounds => prevRounds.filter(round => round.id !== roundId));
+        }
+      } catch (error) {
+        console.error(error)
       }
-    } catch (error) {
-      console.error(error)
     }
   }
 
@@ -59,6 +63,7 @@ const RoundHistory = () => {
               <th>Course Name</th>
               <th>Date</th>
               <th>Holes</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
