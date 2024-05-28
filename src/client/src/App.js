@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthProvider from 'react-auth-kit';
 import createStore from 'react-auth-kit/createStore';
-import RequireAuth from '@auth-kit/react-router/RequireAuth'
+import AuthOutlet from '@auth-kit/react-router'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Layout from "./scenes/layout";
@@ -14,6 +14,8 @@ import Round from "./scenes/round";
 import NewRound from "./scenes/round/NewRound";
 import RoundHistory from "./scenes/round history";
 import MyBag from "./scenes/my bag";
+import Account from "./scenes/account/Account";
+import RequireAuth from "@auth-kit/react-router/RequireAuth";
 
 const theme = createTheme({
   palette: {
@@ -49,13 +51,16 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route element={<Layout />}>
+          
+          <Route element={<RequireAuth fallbackPath='/login'><Layout /></RequireAuth>}>
             <Route path="/" element={<Home />} />
             <Route path="/round/:id" element={<Round />} />
             <Route path="/round/create/single" element={<NewRound />} />
             <Route path="/history" element={<RoundHistory />} />
             <Route path="/bag" element={<MyBag />} />
+            <Route path="/account" element={<Account />} />
           </Route>
+
         </Routes>
       </BrowserRouter>
       </LocalizationProvider>

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { SportsGolf, ManageSearch } from "@mui/icons-material";
+import { SportsGolf, ManageSearch, AccountCircle } from "@mui/icons-material";
 import GolfBagIcon from "../assets/GolfBagIcon"; // Import the React component
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -38,6 +38,11 @@ const Sidebar = () => {
         />
       ),
     },
+    {
+      name: "Account",
+      path: "/account",
+      icon: <AccountCircle />,
+    }
   ];
 
   return (

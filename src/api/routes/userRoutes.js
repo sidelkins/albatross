@@ -3,8 +3,8 @@ const router = express.Router()
 import User from '../controllers/userController.js';
 
 // GET
-router.get('/get/byid', User.getById)
-router.get('/get/byusername', User.getByUsername)
+router.get('/get/by/id/:id', User.getById)
+router.get('/get/by/username/:username', User.getByUsername)
 
 // POST
 router.post('/create', User.save)

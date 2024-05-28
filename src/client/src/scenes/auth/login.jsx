@@ -30,7 +30,7 @@ function Login() {
           }
 
           if(response.ok) {
-            signIn({
+            if(signIn({
               auth: {
                 token: data.token,
                 type: 'Bearer'
@@ -41,7 +41,9 @@ function Login() {
                 username: data.user.username,
                 created: data.user.created
               }
-            })
+            })) {
+              redirectToHome()
+            }
           }
           
         } catch(error) {

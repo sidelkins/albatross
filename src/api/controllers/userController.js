@@ -34,9 +34,9 @@ User.save = async function(req, res) {
 
 // Read
 User.getById = async function(req, res) {
-  const id = req.body.id;
+  const id = req.params.id;
   try {
-    const result = await knexInstance('users').select('id', 'username').where( {id} );
+    const result = await knexInstance('users').select('id', 'username').where( {id} ).first();
     res.json(result)
   } catch (error) {
     console.error(`[USER GET FAILED] ${error}`)
