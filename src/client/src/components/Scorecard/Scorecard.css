@@ -1,0 +1,40 @@
+.scorecard {
+text-align: center;
+margin: 20px;
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.info > input {
+    align-self: center;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid;
+    width: 100px;
+    height: 25px;
+}
+
+table {
+margin: 0 auto;
+border-collapse: collapse;
+width: 90%;
+}
+
+th, td {
+border: 1px solid #ddd;
+padding: 8px;
+text-align: center;
+}
+
+th {
+background-color: #f2f2f2;
+}
+
+input {
+width: 35px;
+text-align: center;
+}
