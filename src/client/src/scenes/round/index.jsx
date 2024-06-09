@@ -5,25 +5,31 @@ import dayjs from "dayjs";
 
 const Round = () => {
   const { id } = useParams();
-  const [course, setCourse] = useState("");
-  const [date, setDate] = useState("");
-  const [scores, setScores] = useState("");
-  const [pars, setPars] = useState("");
-  const [holesPlayed, setHolesPlayed] = useState("");
+  const [round, setRound] = useState({
+    id: '',
+    course_name: '',
+    date: '',
+    scores: [],
+    pars: [],
+    holes_played: []
+  });
 
-  async function retrieveRound() {
+  function retrieveRound() {
     try {
-      const response = await fetch(`/api/round/get/by/id/${id}`, {
+      const response = fetch(`/api/round/get/by/id/${id}`, {
         method: 'GET'
       })
-      const data = await response.json();
+      const data = response.json();
 
       if(response.status === 200) {
-        setCourse(data.course_name)
-        setDate(dayjs(data.date))
-        setScores(data.scores)
-        // setPars()
-        // setHolesPlayed("")
+        setRound({
+          id: id,
+          course_name: data.course_name,
+          date: dayjs(data.date),
+          scores: data.scores,
+          pars: data.pars,
+          holes_played: JSON.parse(data.holes_played)
+        })
       } else {
         console.log(response)
       }
@@ -39,11 +45,7 @@ const Round = () => {
 
   return (
     <GolfScorecard 
-      id={id}
-      initialCourse={course}
-      initialDate={date || null}
-      initialScores={scores}
-      initialPars={pars}
+      round={round}
       />
   );
 };

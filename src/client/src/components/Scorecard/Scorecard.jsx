@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import "./Scorecard.css";
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Button } from '@mui/material';
 
-const GolfScorecard = ({ id, initialCourse, initialDate, initialScores, initialPars }) => {
-  const [course, setCourse] = useState("");
-  const [date, setDate] = useState(initialDate);
-  const [scores, setScores] = useState(Array(18).fill(0) || initialScores);
-  const [pars, setPars] = useState(Array(18).fill(0) || initialPars);
+const GolfScorecard = ({round}) => {
+  const [course, setCourse] = useState("")
+  const [date, setDate] = useState(dayjs);
+  const [holesPlayed, setHolesPlayed] = useState([]);
+  const [scores, setScores] = useState([]);
+  const [pars, setPars] = useState([]);
 
   const handleScoreChange = (index, value) => {
     const newScores = [...scores];
@@ -27,9 +28,8 @@ const GolfScorecard = ({ id, initialCourse, initialDate, initialScores, initialP
       course_name: course,
       date: date
     }
-    console.log(roundData)
     try {
-      const response = await fetch(`/api/round/update/${id}`, {
+      const response = await fetch(`/api/round/update/${round.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
@@ -51,9 +51,13 @@ const GolfScorecard = ({ id, initialCourse, initialDate, initialScores, initialP
   }
 
   useEffect(() => {
-    setCourse(initialCourse)
-    setDate(initialDate)
-  }, [initialCourse, initialDate])
+    setCourse(round.course_name)
+    setDate(dayjs(round.date))
+    setHolesPlayed(round.holes_played)
+    
+    // setScores(round.scores)
+    // setPars(round.pars)
+  }, [round])
 
   const totalPars = pars.reduce((acc, score) => acc + score, 0);
   const totalScore = scores.reduce((acc, score) => acc + score, 0);
@@ -81,9 +85,9 @@ const GolfScorecard = ({ id, initialCourse, initialDate, initialScores, initialP
         <thead>
           <tr>
             <th>Hole</th>
-            {Array.from({ length: 18 }, (_, i) => (
-              <th key={i}>{i + 1}</th>
-            ))}
+            {
+
+            }
             <th>Total</th>
           </tr>
         </thead>

@@ -24,6 +24,7 @@ const NewRound = ({ handleClose }) => {
   const [courseName, setCourseName] = useState("");
   const [date, setDate] = useState()
   const [roundType, setRoundType] = useState("");
+  const [holesPlayed, setHolesPlayed] = useState([]);
   const [tees, setTees] = useState("");
 
   const handleBackButton = () => {
@@ -35,7 +36,19 @@ const NewRound = ({ handleClose }) => {
   };
 
   const handleRoundTypeChange = (type) => {
-    setRoundType(type);
+    setRoundType(type)
+    if(type === "18 Holes") {
+      // Create an array of 18 elements containg numbers 1-18
+      setHolesPlayed(Array.from({ length: 18 }, (v, i) => i + 1));
+    } if(type === "Front 9") {
+      // Create an array of 9 elements containing numbers 1-9
+      setHolesPlayed(Array.from({ length: 9 }, (v, i) => i + 1));
+    } if(type === "Back 9") {
+      // Create an array of 9 elements containing numbers 9-18
+      setHolesPlayed(Array(9).fill().map((_, i) => i + 9));
+    } if(type === "Other") {
+      // TODO: Logic for selected holes
+    }
   };
 
   const handleSubmit = async(e) => {
@@ -47,7 +60,7 @@ const NewRound = ({ handleClose }) => {
     {
       course_name: courseName,
       date: formattedDate,
-      holes_played: roundType,
+      holes_played: holesPlayed,
       player_id: playerId
     }
 
@@ -239,6 +252,28 @@ const NewRound = ({ handleClose }) => {
               }}
             >
               Back 9
+            </Button>
+            <Button // TODO: add selector for which holes were played
+              onClick={() => handleRoundTypeChange("Other")}
+              variant={roundType === "Other" ? "contained" : "outlined"}
+              sx={{
+                backgroundColor:
+                  roundType === "Other"
+                    ? theme.palette.accent.default
+                    : "transparent",
+                color:
+                  roundType === "Other"
+                    ? theme.palette.background.default
+                    : theme.palette.text.default,
+                "&:hover": {
+                  backgroundColor:
+                    roundType === "Other"
+                      ? theme.palette.accent.dark
+                      : "transparent",
+                },
+              }}
+            >
+              Other
             </Button>
           </ButtonGroup>
           <TooltipTextField

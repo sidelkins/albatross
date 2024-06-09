@@ -32,7 +32,7 @@ Round.save = async function(req, res) {
 Round.getByUserId = async function(req, res) {
     const userId = req.params.id;
     try {
-      const result = await knexInstance('rounds').select('*').where('player_id', userId);
+      const result = await knexInstance('rounds').select('id', 'course_name', 'date', 'holes_played').where('player_id', userId);
       res.json(result)
     } catch (error) {
       console.error(`[ROUND GET FAILED] ${error}`)
